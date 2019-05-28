@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Tick42;
@@ -13,9 +14,11 @@ namespace dotnet_app
     public partial class MainWindow : Window
     {
         private Glue42 glue;
-        private IContext context;
-        private const string ContextName = "Current";
-        private const string PortfolioKey = "Portfolio";
+        private IContext instrumentSelectionContext;
+        private IContext portfolioContext;
+        private const string PortfolioContextName = "Portfolio";
+        private const string PortfolioIdKey = "PortfolioId";
+        private const string InstrumentSelectionContextName = "InstrumentSelection";
         private const string SelectedInstrumentKey = "SelectedInstrument";
 
         public MainWindow()
@@ -36,18 +39,19 @@ namespace dotnet_app
 
         private void LbPortfolios_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.context.Update(ctx => {
-                ctx[PortfolioKey] = lbPortfolios.SelectedItem;
+            this.portfolioContext.Update(ctx => {
+                ctx[PortfolioIdKey] = lbPortfolios.SelectedItem;
             });
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.context = await this.glue.Contexts.GetContext(ContextName);
-            this.context.ContextUpdated += Context_ContextUpdated;
+            this.portfolioContext = await this.glue.Contexts.GetContext(PortfolioContextName);
+            this.instrumentSelectionContext = await this.glue.Contexts.GetContext(InstrumentSelectionContextName);
+            this.instrumentSelectionContext.ContextUpdated += InstrumentSelectionContext_ContextUpdated;
         }
 
-        private void Context_ContextUpdated(object sender, ContextUpdatedEventArgs e)
+        private void InstrumentSelectionContext_ContextUpdated(object sender, ContextUpdatedEventArgs e)
         {
             var context = sender as IContext;
             if (context == null)
@@ -55,12 +59,11 @@ namespace dotnet_app
                 return;
             }
 
-            if (context.ContextName != ContextName)
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                return;
-            }
-
-            lblSelectedInstrumentName.Content = (string)context[SelectedInstrumentKey] ?? "None";
+                lblSelectedInstrumentName.Content = ((string)context[SelectedInstrumentKey]) ?? "None";
+            }));
+            
         }
     }
 }

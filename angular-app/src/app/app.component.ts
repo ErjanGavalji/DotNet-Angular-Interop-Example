@@ -1,14 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GlueService } from './glue/glue.service';
+import { Portfolio } from './glue/types';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
 })
-export class AppComponent {
-  private readonly title = 'Glue42 Angular Example';
+export class AppComponent implements OnInit, OnDestroy {
+
+  public readonly title = 'Glue42 Angular Example';
+  public currentPortfolio: Portfolio;
+  public showPortfolio = false;
+
+  private unsubscribeCallback: () => void;
 
   constructor(private readonly glueService: GlueService) { }
+
+  public async ngOnInit(): Promise<void> {
+    this.unsubscribeCallback = await this.glueService.subscribeToContextChanges('Portfolio', this.onContextChangeCallback);
+  }
+
+  public ngOnDestroy(): void {
+    this.unsubscribeCallback();
+  }
+
+  private onContextChangeCallback = (context: any) => {
+    this.showPortfolio = true;
+    this.currentPortfolio = {
+      id: context.PortfolioId,
+      ricList: this.glueService.getRandomInstrumentsList()
+    };
+  }
+
+  public fetchInstrument(): Promise<void> {
+    return this.glueService.fetchInstrument();
+  }
 
   // public async interopExample() {
   //   // option 1 -> recommended

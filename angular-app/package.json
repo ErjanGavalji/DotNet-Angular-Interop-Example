@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "node_modules\\.bin\\ng serve",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve -o",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -16,7 +16,7 @@
     "@angular/animations": "^4.2.4",
     "@angular/common": "^4.2.4",
     "@angular/compiler": "^4.2.4",
-    "@angular/core": "^4.2.4",
+    "@angular/core": "^4.4.7",
     "@angular/forms": "^4.2.4",
     "@angular/http": "^4.2.4",
     "@angular/platform-browser": "^4.2.4",

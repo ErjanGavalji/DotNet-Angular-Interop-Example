@@ -6,3 +6,16 @@
 <h2>Glue Connected</h2>
 <p>Glue.JS version: {{this.glueService.glueVersion}}</p>
 
+
+<ng-container *ngIf="showPortfolio">
+
+  <h2>PortfolioID: {{currentPortfolio.id}}</h2>
+  <ul class="items-list">
+    <li *ngFor="let result of currentPortfolio.ricList">
+      <h5>{{result.ric}}</h5>
+    </li>
+  </ul>
+
+</ng-container>
+
+<button (click)="fetchInstrument()">Fetch Random Instrument</button>
