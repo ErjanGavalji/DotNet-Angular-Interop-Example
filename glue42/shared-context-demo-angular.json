@@ -1,0 +1,31 @@
+[
+    {
+        "title": "Shared Context Demo: Angular",
+        "type": "window",
+        "name": "shred-context-demo-angular",
+        "details": {
+            "url": "http://localhost:4200/",
+            "top": 100,
+            "left": 200,
+            "width": 600,
+            "height": 800,
+            "allowCollapse": false,
+            "startLocation": "center"
+        },
+        "allowMultiple": true,
+        "ignoreSaveOnClose": false
+    },
+    {
+        "title": "Shared Context Demo: WPF",
+        "type": "exe",
+        "name": "shared-context-demo-wpf",
+        "hidden": false,
+        "details": {
+            "path": "%GDDIR%/../Demos/SharedContextDemo-WPF/",
+            "command": "dotnet-app.exe",
+            "parameters": "",
+            "width": 1000,
+            "height": 400
+        }
+    }
+]
