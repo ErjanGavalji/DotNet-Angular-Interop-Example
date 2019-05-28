@@ -25,11 +25,14 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private onContextChangeCallback = (context: any) => {
-    this.showPortfolio = true;
-    this.currentPortfolio = {
-      id: context.PortfolioId,
-      ricList: this.glueService.getRandomInstrumentsList()
-    };
+    if (context.PortfolioId) {
+      this.showPortfolio = true;
+      this.currentPortfolio = {
+        id: context.PortfolioId,
+        ricList: this.glueService.getRandomInstrumentsList()
+      };
+
+    }
   }
 
   public fetchInstrument(): Promise<void> {

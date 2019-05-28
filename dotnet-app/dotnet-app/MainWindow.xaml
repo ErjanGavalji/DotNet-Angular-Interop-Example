@@ -10,7 +10,8 @@
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="209" Margin="32,30,0,0" VerticalAlignment="Top" Width="259">
             <Label Name="lblPortfolios" Content="Portfolios" Margin="9,9,121,164"/>
         </Border>
-        <ListBox Name="lbPortfolios" HorizontalAlignment="Left" Height="165" Margin="32,74,0,0" VerticalAlignment="Top" Width="259" SelectionChanged="LbPortfolios_SelectionChanged"/>
+        <ListBox Name="lbPortfolios" HorizontalAlignment="Left" Height="165" Margin="32,74,0,0" VerticalAlignment="Top" Width="259" SelectionChanged="LbPortfolios_SelectionChanged">
+        </ListBox>
         <Label Content="Selected Instrument" HorizontalAlignment="Left" Margin="420,30,0,0" VerticalAlignment="Top" Name="lblSelectedInstrument"/>
         <Label Name="lblSelectedInstrumentName" Content="None" HorizontalAlignment="Left" Margin="420,61,0,0" VerticalAlignment="Top" Height="178" Width="185"/>
     </Grid>
