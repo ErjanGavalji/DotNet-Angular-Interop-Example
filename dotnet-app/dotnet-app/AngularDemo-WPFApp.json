@@ -1,0 +1,13 @@
+{
+  "title": "WPF-to-Angular",
+  "type": "exe",
+  "name": "dotnet-app",
+  "hidden": false,
+  "details": {
+    "path": "C:\\Demos\\DotNet-Angular-Interop-Example\\dotnet-app\\dotnet-app\\bin\\Debug",
+    "command": "dotnet-app.exe",
+    "parameters": "",
+    "width": 1000,
+    "height": 400
+  }
+}

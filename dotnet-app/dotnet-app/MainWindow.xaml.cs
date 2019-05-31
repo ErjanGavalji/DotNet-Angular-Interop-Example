@@ -3,17 +3,20 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Tick42;
+using Tick42.Channels;
 using Tick42.Contexts;
 using Tick42.StickyWindows;
+using Tick42.Windows;
 
 namespace dotnet_app
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IGlueChannelEventHandler
     {
         private Glue42 glue;
+        private IGlueWindow glueWindow;
         private IContext instrumentSelectionContext;
         private IContext portfolioContext;
         private const string PortfolioContextName = "Portfolio";
@@ -33,8 +36,14 @@ namespace dotnet_app
             this.glue.Initialize("DotNetApp", useContexts: true);
 
             // Initialize Window Stickiness and read from config:
-            var swOptions = this.glue.StickyWindows?.GetStartupOptions() ?? new SwOptions();
-            this.glue.StickyWindows?.RegisterWindow(this, swOptions);
+            var swOptions = this.glue.GlueWindows?.GetStartupOptions() ?? new GlueWindowOptions();
+            swOptions.WithChannelSupport(true);
+            this.glue.GlueWindows?.RegisterWindow(this, swOptions)
+            .ContinueWith(r =>
+            {
+                this.glueWindow = r.Result;
+            });
+
         }
 
         private void LbPortfolios_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -64,6 +73,19 @@ namespace dotnet_app
                 lblSelectedInstrumentName.Content = ((string)context[SelectedInstrumentKey]) ?? "None";
             }));
             
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.glueWindow.ChannelContext.SetValue(tbBBG.Text, "data.partyPortfolio.ric", ChannelLevel.Root);
+        }
+
+        public void HandleChannelChanged(IGlueChannelContext channelContext, IGlueChannel newChannel, IGlueChannel prevChannel)
+        {
+        }
+
+        public void HandleUpdate(IGlueChannelContext channelContext, IGlueChannel channel, ContextUpdatedEventArgs updateArgs)
+        {
         }
     }
 }
