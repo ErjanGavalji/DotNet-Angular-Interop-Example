@@ -19,6 +19,14 @@ namespace dotnet_app
         private IGlueWindow glueWindow;
         private IContext instrumentSelectionContext;
         private IContext portfolioContext;
+
+        /// <summary>
+        /// In order for this field path to work, we have two changes in %localappdata%\tick42\GlueDesktop\config\channels.json
+        /// 1. Change *all* readDataFieldPath and writeDataFieldPath to data.instrument.bbg
+        /// 2. Change *all* read and write fields to "blp" -- to force bridge to read/write Bloomberg instrument codes and not RIC
+        /// </summary>
+
+        private string instrumentFieldPath_ = "data.instrument.bbg";
         private const string PortfolioContextName = "Portfolio";
         private const string PortfolioIdKey = "PortfolioId";
         private const string InstrumentSelectionContextName = "InstrumentSelection";
@@ -39,10 +47,18 @@ namespace dotnet_app
             var swOptions = this.glue.GlueWindows?.GetStartupOptions() ?? new GlueWindowOptions();
             swOptions.WithChannelSupport(true);
             this.glue.GlueWindows?.RegisterWindow(this, swOptions)
-            .ContinueWith(r =>
-            {
-                this.glueWindow = r.Result;
-            });
+                .ContinueWith(r =>
+                {
+                    glueWindow = r.Result;
+                    glueWindow.Title = "Glue42 Bloomberg Net App";
+                    glueWindow.ChannelContext.Subscribe(new LambdaGlueChannelEventHandler<string>(
+                        (context, channel, instrument) =>
+                            Dispatcher.BeginInvoke((Action) (() => tbBBG.Text = instrument)),
+                        (context, channel, arg3) => Dispatcher.BeginInvoke((Action) (() => tbBBG.Text =
+                            context.GetValue<string>(
+                                instrumentFieldPath_,
+                                ChannelLevel.Root)))), instrumentFieldPath_, ChannelLevel.Root);
+                });
 
         }
 
@@ -77,7 +93,7 @@ namespace dotnet_app
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.glueWindow.ChannelContext.SetValue(tbBBG.Text, "data.partyPortfolio.ric", ChannelLevel.Root);
+            this.glueWindow.ChannelContext.SetValue(tbBBG.Text, instrumentFieldPath_, ChannelLevel.Root);
         }
 
         public void HandleChannelChanged(IGlueChannelContext channelContext, IGlueChannel newChannel, IGlueChannel prevChannel)
