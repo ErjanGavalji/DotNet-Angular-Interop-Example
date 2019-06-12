@@ -21,3 +21,6 @@ AngularJS (Web) one.
 11. Use the AppManager (LaunchPad) to start the two applications
 12. Selecting an entry from the WPF application listbox leads to a change in the portfolio display (JavaScript window)
 13. Hitting the button in the JavaScript application results in an instrument displayed in the WPF application
+
+## Troubleshooting
+- Make sure you have enabled the [Nuget Package restore](https://docs.microsoft.com/en-us/nuget/consume-packages/package-restore-troubleshooting) option if you get errors like `The type of namespace DOT/ServiceContractAttribute/ServiceContract could not be found`.
